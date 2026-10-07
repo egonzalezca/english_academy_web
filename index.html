@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Curso personal y offline de inglés intermedio.">
+    <title>English Bloom · Mi curso de inglés</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="lessons.js" defer></script>
+    <script src="grammar-lessons.js" defer></script>
+    <script src="data/book-content.js" defer></script>
+    <script src="github-sync.js" defer></script>
+    <script src="materials.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+
+    <header class="site-header">
+      <a class="brand" href="#/" aria-label="English Bloom, inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" role="img">
+            <path d="M12 31c8-1 13-6 14-16 7 4 9 11 5 17-4 6-13 7-19 2Z"/>
+            <path d="M12 32c5-6 10-9 16-11" fill="none"/>
+          </svg>
+        </span>
+        <span><strong>English Bloom</strong><small>Inglés a tu ritmo</small></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a class="nav-link is-active" href="#/" data-nav="home">Mi curso</a>
+        <a class="nav-link" href="#/grammar" data-nav="grammar">Gramática</a>
+        <a class="nav-link" href="#/materials" data-nav="materials">Mis temas</a>
+        <button class="icon-button" type="button" aria-label="Ver información del curso" data-about-button>?</button>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <div id="app" aria-live="polite"></div>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Navegación móvil">
+      <a href="#/" data-nav="home"><span aria-hidden="true">⌂</span>Curso</a>
+      <a href="#/grammar" data-nav="grammar"><span aria-hidden="true">Aa</span>Gramática</a>
+      <a href="#/materials" data-nav="materials"><span aria-hidden="true">▣</span>Mis temas</a>
+    </nav>
+
+    <footer>
+      <p>Tu espacio de estudio personal · Funciona sin conexión</p>
+    </footer>
+
+    <dialog id="about-dialog" aria-labelledby="about-title">
+      <button class="dialog-close" type="button" aria-label="Cerrar" data-close-dialog>&times;</button>
+      <p class="eyebrow">SOBRE ESTE CURSO</p>
+      <h2 id="about-title">Aprende con una ruta clara</h2>
+      <p>Las lecciones combinan explicaciones originales en español con ejemplos y práctica en inglés. Se inspiran en tus libros, sin reproducir sus páginas.</p>
+      <div class="source-note">
+        <span aria-hidden="true">📚</span>
+        <p><strong>Fuentes de referencia</strong><br>English for Everyone Level 3 y English Grammar in Use, 5th Edition.</p>
+      </div>
+    </dialog>
+
+    <dialog id="reset-dialog" aria-labelledby="reset-title">
+      <button class="dialog-close" type="button" aria-label="Cerrar" data-close-reset>&times;</button>
+      <p class="eyebrow">REINICIAR CURSO</p>
+      <h2 id="reset-title">¿Borrar todo tu progreso?</h2>
+      <p>Se eliminarán tus puntuaciones e intentos de este navegador. Esta acción no se puede deshacer.</p>
+      <div class="dialog-actions">
+        <button class="secondary-button" type="button" data-cancel-reset>Cancelar</button>
+        <button class="danger-button" type="button" data-confirm-reset>Sí, reiniciar</button>
+      </div>
+    </dialog>
+  </body>
+</html>
