@@ -147,7 +147,7 @@ footer p { max-width: 900px; margin: 0 auto; line-height: 1.6; }
 .hero {
   --p: 0;
   position: relative;
-  display: flex; flex-direction: column; align-items: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-height: calc(100svh - 52px);
   padding: clamp(56px, 10vh, 110px) 20px 40px;
   overflow: hidden;
@@ -167,22 +167,6 @@ footer p { max-width: 900px; margin: 0 auto; line-height: 1.6; }
 .hero-next { margin: 18px 0 0; color: var(--text-3); font-size: .9rem; }
 .hero-next a { color: var(--text-2); text-decoration: none; }
 .hero-next a strong { color: inherit; font-weight: 600; }
-.liquid {
-  order: 2;
-  position: relative; z-index: 1;
-  width: min(74vmin, 600px);
-  margin-top: clamp(10px, 3vh, 40px);
-  transform: translateY(calc(var(--p) * -12%)) scale(calc(1 + var(--p) * .45));
-  opacity: calc(1 - var(--p) * .75);
-  filter: drop-shadow(0 50px 90px rgba(200,210,230,.18));
-  will-change: transform, opacity;
-}
-.liquid::after {
-  content: ""; position: absolute; inset: 18% 10% -6%; z-index: -1;
-  background: radial-gradient(closest-side, rgba(160,175,200,.28), transparent);
-  filter: blur(30px);
-}
-.liquid svg { display: block; width: 100%; height: auto; }
 .scroll-cue { position: absolute; bottom: 22px; left: 50%; width: 24px; height: 38px; border: 1.5px solid rgba(255,255,255,.35); border-radius: 14px; transform: translateX(-50%); opacity: calc(1 - var(--p) * 3); }
 .scroll-cue::after { content: ""; position: absolute; top: 7px; left: 50%; width: 3px; height: 7px; border-radius: 3px; background: var(--text); transform: translateX(-50%); animation: cue 1.8s var(--ease) infinite; }
 @keyframes cue { 0% { opacity: 0; transform: translate(-50%, -3px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, 12px); } }
@@ -593,7 +577,6 @@ dialog > p:not(.eyebrow) { color: var(--text-2); line-height: 1.6; }
   .mobile-nav a.is-active { color: var(--text); }
   body { padding-bottom: 92px; }
   .hero { min-height: calc(100svh - 52px - 92px); padding-top: 48px; }
-  .liquid { width: min(92vw, 420px); }
   .scroll-cue { display: none; }
   .bento { width: calc(100% - 32px); gap: 12px; }
   .bento-tile { min-height: 170px; padding: 22px; }
@@ -636,7 +619,7 @@ dialog > p:not(.eyebrow) { color: var(--text-2); line-height: 1.6; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .js-motion [data-reveal]:not(.is-revealed) { opacity: 1; transform: none; filter: none; }
-  .hero-copy, .liquid { transform: none; opacity: 1; }
+  .hero-copy { transform: none; opacity: 1; }
 }
 
 /* --- Impresión: una ficha por página ------------------------------------------------- */

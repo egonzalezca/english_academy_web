@@ -217,62 +217,6 @@
   // ---------------------------------------------------------------------------
   // Inicio
   // ---------------------------------------------------------------------------
-  // Metal líquido: esferas que se funden (blur + umbral alfa), deformadas por
-  // ruido animado y con brillo especular para el acabado cromado.
-  function liquidMetal() {
-    return `
-      <div class="liquid" aria-hidden="true">
-        <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" data-liquid>
-          <defs>
-            <linearGradient id="lm-chrome" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#f4f6f9"/>
-              <stop offset=".14" stop-color="#5a6069"/>
-              <stop offset=".3" stop-color="#d7dbe1"/>
-              <stop offset=".44" stop-color="#1c1f24"/>
-              <stop offset=".58" stop-color="#aab0b9"/>
-              <stop offset=".72" stop-color="#2b2f35"/>
-              <stop offset=".86" stop-color="#e9ecf0"/>
-              <stop offset="1" stop-color="#4b5058"/>
-              <animateTransform attributeName="gradientTransform" type="rotate" values="0 .5 .5;360 .5 .5" dur="22s" repeatCount="indefinite"/>
-            </linearGradient>
-            <filter id="lm-fluid" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="blur"/>
-              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -11" result="goo"/>
-              <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="noise">
-                <animate attributeName="baseFrequency" dur="26s" values="0.009 0.013;0.013 0.008;0.009 0.013" repeatCount="indefinite"/>
-              </feTurbulence>
-              <feDisplacementMap in="goo" in2="noise" scale="46" xChannelSelector="R" yChannelSelector="G" result="liquid"/>
-              <feGaussianBlur in="liquid" stdDeviation="5" result="soft"/>
-              <feSpecularLighting in="soft" surfaceScale="6" specularConstant=".75" specularExponent="38" lighting-color="#ffffff" result="spec">
-                <fePointLight x="180" y="60" z="320">
-                  <animate attributeName="x" dur="14s" values="140;460;140" repeatCount="indefinite"/>
-                </fePointLight>
-              </feSpecularLighting>
-              <feComposite in="spec" in2="liquid" operator="in" result="shine"/>
-              <feComposite in="liquid" in2="shine" operator="arithmetic" k1="0" k2="1" k3=".55" k4="0"/>
-            </filter>
-          </defs>
-          <g filter="url(#lm-fluid)" fill="url(#lm-chrome)">
-            <circle cx="300" cy="300" r="150">
-              <animate attributeName="r" dur="9s" values="150;170;150" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="420" cy="210" r="78">
-              <animate attributeName="cx" dur="11s" values="420;360;440;420" repeatCount="indefinite"/>
-              <animate attributeName="cy" dur="11s" values="210;160;250;210" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="190" cy="390" r="92">
-              <animate attributeName="cx" dur="13s" values="190;250;170;190" repeatCount="indefinite"/>
-              <animate attributeName="cy" dur="13s" values="390;430;340;390" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="410" cy="420" r="52">
-              <animate attributeName="cx" dur="8s" values="410;350;420;410" repeatCount="indefinite"/>
-              <animate attributeName="cy" dur="8s" values="420;380;460;420" repeatCount="indefinite"/>
-            </circle>
-          </g>
-        </svg>
-      </div>`;
-  }
-
   function renderHome() {
     setActiveNav("home");
     document.title = "English Bloom · Tu camino al C1 Advanced";
@@ -291,7 +235,6 @@
 
     app.innerHTML = `
       <section class="hero" data-hero>
-        ${liquidMetal()}
         <div class="hero-copy">
           <p class="eyebrow">Cambridge C1 Advanced</p>
           <h1 class="chrome-text">Del B1 al C1.<br>Ficha a ficha.</h1>
@@ -1209,12 +1152,6 @@
     if (hero) {
       const progressValue = Math.min(1, Math.max(0, window.scrollY / (hero.offsetHeight * 0.85)));
       hero.style.setProperty("--p", progressValue.toFixed(3));
-      const svg = hero.querySelector("[data-liquid]");
-      if (svg?.pauseAnimations) {
-        // Fuera de pantalla o con reduced motion, el metal deja de animarse.
-        if (reducedMotion.matches || progressValue >= 1) svg.pauseAnimations();
-        else svg.unpauseAnimations();
-      }
     }
     document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 8);
     revealVisible();
