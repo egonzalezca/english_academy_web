@@ -1,0 +1,14 @@
+{
+  "name": "English Bloom · Camino al C1 Advanced",
+  "short_name": "English Bloom",
+  "description": "Guías visuales B1, B2 y C1 para preparar el Cambridge C1 Advanced.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf5",
+  "theme_color": "#0d746f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

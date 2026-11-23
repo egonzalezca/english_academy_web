@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guías visuales B1, B2 y C1 para preparar el Cambridge C1 Advanced.">
+    <meta name="theme-color" content="#0d746f">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <title>English Bloom · Tu camino al C1 Advanced</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="guides.css">
+    <script src="guides/exam-format.js" defer></script>
+    <script src="guides/b1.js" defer></script>
+    <script src="guides/b2.js" defer></script>
+    <script src="guides/c1.js" defer></script>
+    <script src="guides/vocabulary.js" defer></script>
+    <script src="guides/exam.js" defer></script>
+    <script src="github-sync.js" defer></script>
+    <script src="materials.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+
+    <header class="site-header">
+      <a class="brand" href="#/" aria-label="English Bloom, inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" role="img">
+            <path d="M12 31c8-1 13-6 14-16 7 4 9 11 5 17-4 6-13 7-19 2Z"/>
+            <path d="M12 32c5-6 10-9 16-11" fill="none"/>
+          </svg>
+        </span>
+        <span><strong>English Bloom</strong><small>Camino al C1 Advanced</small></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a class="nav-link is-active" href="#/" data-nav="home">Inicio</a>
+        <a class="nav-link" href="#/guides" data-nav="guides">Guías</a>
+        <a class="nav-link" href="#/exam" data-nav="exam">Examen</a>
+        <a class="nav-link" href="#/review" data-nav="review">Repaso</a>
+        <a class="nav-link" href="#/plan" data-nav="plan">Plan</a>
+        <a class="nav-link" href="#/materials" data-nav="materials">Mis temas</a>
+        <button class="icon-button" type="button" aria-label="Ver información del curso" data-about-button>?</button>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <div id="app" aria-live="polite"></div>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Navegación móvil">
+      <a href="#/" data-nav="home"><span aria-hidden="true">⌂</span>Inicio</a>
+      <a href="#/guides" data-nav="guides"><span aria-hidden="true">▤</span>Guías</a>
+      <a href="#/exam" data-nav="exam"><span aria-hidden="true">✎</span>Examen</a>
+      <a href="#/review" data-nav="review"><span aria-hidden="true">↻</span>Repaso</a>
+      <a href="#/plan" data-nav="plan"><span aria-hidden="true">◷</span>Plan</a>
+      <a href="#/materials" data-nav="materials"><span aria-hidden="true">▣</span>Temas</a>
+    </nav>
+
+    <footer>
+      <p>English Bloom · Guías de preparación para el Cambridge C1 Advanced · Material original, sin afiliación con Cambridge University Press &amp; Assessment</p>
+    </footer>
+
+    <dialog id="about-dialog" aria-labelledby="about-title">
+      <button class="dialog-close" type="button" aria-label="Cerrar" data-close-dialog>&times;</button>
+      <p class="eyebrow">SOBRE ESTE CURSO</p>
+      <h2 id="about-title">Prepara el C1 paso a paso</h2>
+      <p>Guías visuales en formato de fichas, con teoría en español y práctica en inglés, que recorren el temario de B1, B2 y C1 y cada parte del examen Cambridge C1 Advanced.</p>
+      <div class="source-note">
+        <span aria-hidden="true">🎓</span>
+        <p><strong>Cómo usarlas</strong><br>Desliza las fichas, haz la práctica y vuelve a las guías que no llegues al 80 %. Crea tu plan con la fecha del examen para repartir el temario.</p>
+      </div>
+    </dialog>
+
+    <dialog id="reset-dialog" aria-labelledby="reset-title">
+      <button class="dialog-close" type="button" aria-label="Cerrar" data-close-reset>&times;</button>
+      <p class="eyebrow">REINICIAR CURSO</p>
+      <h2 id="reset-title">¿Borrar todo tu progreso?</h2>
+      <p>Se eliminarán tus puntuaciones, guías leídas y tu plan de estudio. Tus carpetas de Mis temas no se borran. Esta acción no se puede deshacer.</p>
+      <div class="dialog-actions">
+        <button class="secondary-button" type="button" data-cancel-reset>Cancelar</button>
+        <button class="danger-button" type="button" data-confirm-reset>Sí, reiniciar</button>
+      </div>
+    </dialog>
+  </body>
+</html>
