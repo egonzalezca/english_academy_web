@@ -217,6 +217,62 @@
   // ---------------------------------------------------------------------------
   // Inicio
   // ---------------------------------------------------------------------------
+  // Metal líquido: esferas que se funden (blur + umbral alfa), deformadas por
+  // ruido animado y con brillo especular para el acabado cromado.
+  function liquidMetal() {
+    return `
+      <div class="liquid" aria-hidden="true">
+        <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" data-liquid>
+          <defs>
+            <linearGradient id="lm-chrome" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f4f6f9"/>
+              <stop offset=".14" stop-color="#5a6069"/>
+              <stop offset=".3" stop-color="#d7dbe1"/>
+              <stop offset=".44" stop-color="#1c1f24"/>
+              <stop offset=".58" stop-color="#aab0b9"/>
+              <stop offset=".72" stop-color="#2b2f35"/>
+              <stop offset=".86" stop-color="#e9ecf0"/>
+              <stop offset="1" stop-color="#4b5058"/>
+              <animateTransform attributeName="gradientTransform" type="rotate" values="0 .5 .5;360 .5 .5" dur="22s" repeatCount="indefinite"/>
+            </linearGradient>
+            <filter id="lm-fluid" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="blur"/>
+              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -11" result="goo"/>
+              <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="noise">
+                <animate attributeName="baseFrequency" dur="26s" values="0.009 0.013;0.013 0.008;0.009 0.013" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="goo" in2="noise" scale="46" xChannelSelector="R" yChannelSelector="G" result="liquid"/>
+              <feGaussianBlur in="liquid" stdDeviation="5" result="soft"/>
+              <feSpecularLighting in="soft" surfaceScale="6" specularConstant=".75" specularExponent="38" lighting-color="#ffffff" result="spec">
+                <fePointLight x="180" y="60" z="320">
+                  <animate attributeName="x" dur="14s" values="140;460;140" repeatCount="indefinite"/>
+                </fePointLight>
+              </feSpecularLighting>
+              <feComposite in="spec" in2="liquid" operator="in" result="shine"/>
+              <feComposite in="liquid" in2="shine" operator="arithmetic" k1="0" k2="1" k3=".55" k4="0"/>
+            </filter>
+          </defs>
+          <g filter="url(#lm-fluid)" fill="url(#lm-chrome)">
+            <circle cx="300" cy="300" r="150">
+              <animate attributeName="r" dur="9s" values="150;170;150" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="420" cy="210" r="78">
+              <animate attributeName="cx" dur="11s" values="420;360;440;420" repeatCount="indefinite"/>
+              <animate attributeName="cy" dur="11s" values="210;160;250;210" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="190" cy="390" r="92">
+              <animate attributeName="cx" dur="13s" values="190;250;170;190" repeatCount="indefinite"/>
+              <animate attributeName="cy" dur="13s" values="390;430;340;390" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="410" cy="420" r="52">
+              <animate attributeName="cx" dur="8s" values="410;350;420;410" repeatCount="indefinite"/>
+              <animate attributeName="cy" dur="8s" values="420;380;460;420" repeatCount="indefinite"/>
+            </circle>
+          </g>
+        </svg>
+      </div>`;
+  }
+
   function renderHome() {
     setActiveNav("home");
     document.title = "English Bloom · Tu camino al C1 Advanced";
@@ -228,76 +284,88 @@
     const started = Boolean(Object.keys(progress.guides).length);
     const remaining = daysUntil(progress.plan?.examDate);
     const streak = streakDays();
-    const upcoming = guides.filter((guide) => !isMastered(guide) && guide.id !== next?.id).slice(0, 3);
+    const upcoming = guides.filter((guide) => !isMastered(guide) && guide.id !== next?.id).slice(0, 4);
     const pendingCount = pendingMistakes().length;
+    const slideCount = guides.reduce((sum, guide) => sum + guide.slides.length, 0);
+    const exerciseCount = guides.reduce((sum, guide) => sum + guide.exercises.length, 0);
 
     app.innerHTML = `
-      <section class="hero">
+      <section class="hero" data-hero>
+        ${liquidMetal()}
         <div class="hero-copy">
-          <p class="eyebrow">TU CAMINO AL CAMBRIDGE C1 ADVANCED</p>
-          <h1>Del B1 al <em>C1</em>,<br>ficha a ficha.</h1>
-          <p class="hero-text">Guías visuales y breves con todo el temario de gramática, vocabulario y las partes del examen. Teoría en español, práctica en inglés.</p>
+          <p class="eyebrow">Cambridge C1 Advanced</p>
+          <h1 class="chrome-text">Del B1 al C1.<br>Ficha a ficha.</h1>
+          <p class="hero-text">Todo el temario de gramática, vocabulario y cada parte del examen, en guías visuales que se leen en minutos.</p>
           <div class="hero-actions">
-            ${next ? `<a class="primary-button" href="#/guide/${next.id}">${started ? "Continuar" : "Empezar"}: ${escapeHtml(next.title)} <span aria-hidden="true">→</span></a>` : ""}
-            <a class="secondary-button" href="#/exam">Ver el examen</a>
+            ${next ? `<a class="primary-button" href="#/guide/${next.id}">${started ? "Continuar" : "Empezar ahora"}</a>` : ""}
+            <a class="text-link" href="#/exam">Conoce el examen <span aria-hidden="true">›</span></a>
           </div>
+          ${next ? `<p class="hero-next">${started ? "Siguiente" : "Primera guía"}: <a href="#/guide/${next.id}">${fmt(next.title)}</a></p>` : ""}
         </div>
-        <div class="progress-card" aria-label="Resumen de progreso">
-          <div class="progress-ring" style="--progress: ${percent}">
-            <div><strong>${percent}%</strong><span>dominado</span></div>
-          </div>
-          <div>
-            <p class="eyebrow">TU PROGRESO</p>
-            <h2>${mastered ? `${mastered} de ${total} guías dominadas.` : started ? "Vas por buen camino." : "Hoy es un buen día para empezar."}</h2>
-            <div class="progress-stats">
-              <span><strong>${read}/${total}</strong> guías abiertas</span>
-              <span><strong>${streak}</strong> ${streak === 1 ? "día" : "días"} de racha</span>
-              ${remaining !== null && remaining >= 0 ? `<span><strong>${remaining}</strong> días para el examen</span>` : `<span><a href="#/plan">Fija la fecha de tu examen</a></span>`}
-            </div>
-          </div>
-        </div>
+        <span class="scroll-cue" aria-hidden="true"></span>
       </section>
 
-      <section class="course-section" aria-labelledby="levels-title">
-        <div class="section-heading">
-          <div><p class="eyebrow">EL TEMARIO</p><h2 id="levels-title">Tres niveles, un objetivo</h2></div>
-          <div class="section-tools">
-            <p>Si ya tienes un B2 sólido, empieza por C1 y usa B1/B2 para repasar lo que falle.</p>
-            ${started ? '<button class="reset-button" type="button" data-reset-progress>Reiniciar progreso</button>' : ""}
+      <section class="statement" data-reveal>
+        <p class="statement-big"><span class="chrome-text">${total} guías.</span> <span class="chrome-text">${slideCount} fichas.</span> <span class="chrome-text">${exerciseCount} ejercicios.</span></p>
+        <p class="statement-sub">Teoría en español, práctica en inglés y la estrategia exacta para cada parte del examen.</p>
+      </section>
+
+      <section class="bento" aria-label="Tu progreso">
+        <article class="bento-tile bento-progress" data-reveal>
+          <div class="progress-ring" style="--progress: ${percent}"><div><strong>${percent}%</strong><span>dominado</span></div></div>
+          <div>
+            <p class="eyebrow">Tu progreso</p>
+            <h2>${mastered ? `${mastered} de ${total} guías dominadas.` : started ? "Vas por buen camino." : "Hoy es un buen día para empezar."}</h2>
+            <p>${read} de ${total} guías abiertas</p>
           </div>
-        </div>
+        </article>
+        <article class="bento-tile" data-reveal>
+          <p class="eyebrow">Racha</p>
+          <strong class="bento-number chrome-text">${streak}</strong>
+          <p>${streak === 1 ? "día seguido" : "días seguidos"} estudiando</p>
+        </article>
+        <a class="bento-tile" href="#/plan" data-reveal>
+          <p class="eyebrow">Examen</p>
+          ${remaining !== null && remaining >= 0 ? `<strong class="bento-number chrome-text">${remaining}</strong><p>días para el examen</p>` : `<strong class="bento-number chrome-text">—</strong><p>Fija la fecha y crea tu plan <span aria-hidden="true">›</span></p>`}
+        </a>
+        <a class="bento-tile bento-review" href="#/review" data-reveal>
+          <p class="eyebrow">Repaso inteligente</p>
+          <h2>${pendingCount ? `${pendingCount} ${pendingCount === 1 ? "ejercicio espera" : "ejercicios esperan"} repaso.` : "Tu cola de repaso está al día."}</h2>
+          <p>Errores, key word transformations al azar y tests por nivel <span aria-hidden="true">›</span></p>
+        </a>
+      </section>
+
+      <section class="home-section" aria-labelledby="levels-title">
+        <header class="section-heading" data-reveal>
+          <p class="eyebrow">El temario</p>
+          <h2 id="levels-title">Tres niveles.<br><span class="chrome-text">Un objetivo.</span></h2>
+          <p>Si ya tienes un B2 sólido, empieza por C1 y usa B1 y B2 para repasar lo que falle.</p>
+        </header>
         <div class="level-grid">
-          ${LEVELS.map((level) => {
+          ${LEVELS.map((level, index) => {
             const stats = levelStats(level.id);
             return `
-              <a class="level-card" data-level="${levelSlug(level.id)}" href="#/guides?level=${level.id}">
-                <span class="level-badge">${level.name}</span>
+              <a class="level-card" data-level="${levelSlug(level.id)}" href="#/guides?level=${level.id}" data-reveal style="--i:${index}">
+                <span class="level-orb" aria-hidden="true">${level.name}</span>
                 <h3>${level.label}</h3>
                 <p>${level.description}</p>
                 <div class="card-progress" aria-hidden="true"><span style="width:${stats.percent}%"></span></div>
-                <span class="level-card-meta">${stats.total ? `${stats.mastered}/${stats.total} dominadas` : "Guías en preparación"}<span aria-hidden="true">→</span></span>
+                <span class="level-card-meta">${stats.mastered}/${stats.total} dominadas <span aria-hidden="true">›</span></span>
               </a>`;
           }).join("")}
         </div>
-        ${upcoming.length ? `
-          <div class="section-heading section-heading-small">
-            <div><p class="eyebrow">A CONTINUACIÓN</p><h2>Siguientes guías</h2></div>
-            <div class="section-tools"><a class="text-link" href="#/guides">Ver todas las guías →</a></div>
-          </div>
-          <div class="guide-grid">${upcoming.map(guideCard).join("")}</div>` : ""}
       </section>
 
-      <section class="materials-home-feature review-home-card" aria-labelledby="review-home-title">
-        <span aria-hidden="true">🔁</span>
-        <div><p class="eyebrow">REPASO INTELIGENTE</p><h2 id="review-home-title">${pendingCount ? `${pendingCount} ${pendingCount === 1 ? "ejercicio espera" : "ejercicios esperan"} repaso` : "Tu cola de repaso está al día"}</h2><p>Repasa tus errores, practica key word transformations al azar o haz un test mixto por nivel.</p></div>
-        <a class="secondary-button" href="#/review">Ir al repaso <span aria-hidden="true">→</span></a>
-      </section>
+      ${upcoming.length ? `
+        <section class="home-section" aria-labelledby="next-title">
+          <header class="section-heading section-heading-row" data-reveal>
+            <h2 id="next-title">A continuación.</h2>
+            <a class="text-link" href="#/guides">Ver todas las guías <span aria-hidden="true">›</span></a>
+          </header>
+          <div class="guide-grid">${upcoming.map(guideCard).join("")}</div>
+        </section>` : ""}
 
-      <section class="materials-home-feature" aria-labelledby="materials-home-title">
-        <span aria-hidden="true">📁</span>
-        <div><p class="eyebrow">TU ESPACIO DE ESTUDIO</p><h2 id="materials-home-title">Tus apuntes y materiales</h2><p>Guarda collocations nuevas, tus writings corregidos o exámenes de práctica en carpetas y boards.</p></div>
-        <a class="secondary-button" href="#/materials">Abrir Mis temas <span aria-hidden="true">→</span></a>
-      </section>`;
+      ${started ? `<p class="home-reset"><button class="text-button" type="button" data-reset-progress>Reiniciar progreso</button></p>` : ""}`;
 
     document.querySelector("[data-reset-progress]")?.addEventListener("click", () => resetDialog.showModal());
   }
@@ -793,7 +861,7 @@
     session.selectedWords = [];
     if (session.index >= session.items.length) renderResults();
     else renderExercise();
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
   }
 
   function mistakesList(mistakes) {
@@ -1031,7 +1099,7 @@
           entry.guideIds.push(pending[cursor].id);
           cursor += 1;
         }
-        if (week % 2 === 1) entry.tasks.push("Writing: escribe un texto de 220–260 palabras y guárdalo en Mis temas");
+        if (week % 2 === 1) entry.tasks.push("Writing: escribe un texto de 220–260 palabras y revísalo con la guía de Writing");
         if (week % 2 === 0) entry.tasks.push("Listening: un podcast o charla en inglés de 20 min tomando notas");
         if (week > 0) entry.tasks.push("Repaso: repite la práctica de las guías por debajo del 80 %");
       } else {
@@ -1115,6 +1183,55 @@
   }
 
   // ---------------------------------------------------------------------------
+  // Movimiento: aparición al hacer scroll, hero ligado al scroll y transiciones
+  // entre páginas (View Transitions API). Todo se desactiva con reduced motion.
+  // ---------------------------------------------------------------------------
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const REVEAL_SELECTORS = ".page-hero, .guide-filters, .guide-group, .exam-overview, .exam-paper, .exam-scale, .review-mode, .review-weak, .plan-form, .plan-summary, .plan-week, .guide-panel";
+  // Revela los bloques que ya han entrado (o pasado) por la ventana. Se calcula
+  // con getBoundingClientRect en cada frame de scroll: no depende de
+  // IntersectionObserver y nunca deja contenido oculto si el usuario salta.
+  function revealVisible() {
+    const limit = window.innerHeight * 0.92;
+    document.querySelectorAll("[data-reveal]:not(.is-revealed)").forEach((element) => {
+      if (element.getBoundingClientRect().top < limit) element.classList.add("is-revealed");
+    });
+  }
+
+  function enhance() {
+    document.querySelectorAll(REVEAL_SELECTORS).forEach((element) => element.setAttribute("data-reveal", ""));
+    if (reducedMotion.matches) document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
+    updateScrollEffects();
+  }
+
+  function updateScrollEffects() {
+    const hero = document.querySelector("[data-hero]");
+    if (hero) {
+      const progressValue = Math.min(1, Math.max(0, window.scrollY / (hero.offsetHeight * 0.85)));
+      hero.style.setProperty("--p", progressValue.toFixed(3));
+      const svg = hero.querySelector("[data-liquid]");
+      if (svg?.pauseAnimations) {
+        // Fuera de pantalla o con reduced motion, el metal deja de animarse.
+        if (reducedMotion.matches || progressValue >= 1) svg.pauseAnimations();
+        else svg.unpauseAnimations();
+      }
+    }
+    document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 8);
+    revealVisible();
+  }
+
+  window.addEventListener("resize", updateScrollEffects, { passive: true });
+  // El trabajo por evento es mínimo (unas pocas lecturas de posición), así que
+  // se hace directamente: requestAnimationFrame se pausa en pestañas o iframes
+  // en segundo plano y dejaría bloques sin revelar.
+  window.addEventListener("scroll", updateScrollEffects, { passive: true });
+
+  function navigate() {
+    if (document.startViewTransition && !reducedMotion.matches) document.startViewTransition(() => route());
+    else route();
+  }
+
+  // ---------------------------------------------------------------------------
   // Router
   // ---------------------------------------------------------------------------
   function route() {
@@ -1124,7 +1241,6 @@
     const params = new URLSearchParams(query);
     const practiceMatch = path.match(/^\/guide\/([^/]+)\/practice$/);
     const guideMatch = path.match(/^\/guide\/([^/]+)$/);
-    const materialsMatch = path.match(/^\/materials(?:\/([^/]+))?$/);
     if (practiceMatch) startPractice(decodeURIComponent(practiceMatch[1]));
     else if (guideMatch) renderGuide(decodeURIComponent(guideMatch[1]), params.has("slide") ? Math.max(0, Number.parseInt(params.get("slide"), 10) - 1 || 0) : null);
     else if (path === "/guides") renderGuideList(params);
@@ -1132,9 +1248,9 @@
     else if (path === "/review") renderReview();
     else if (path === "/review/start") startReview(params.get("mode"), params.get("level"));
     else if (path === "/plan") renderPlan();
-    else if (materialsMatch) window.ENGLISH_BLOOM_MATERIALS.render({ app, setActiveNav, escapeHtml, topicId: materialsMatch[1] || null });
     else renderHome();
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    enhance();
   }
 
   document.querySelector("[data-about-button]").addEventListener("click", () => dialog.showModal());
@@ -1151,12 +1267,13 @@
     resetDialog.close();
     location.hash = "#/";
     renderHome();
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
   });
   resetDialog.addEventListener("click", (event) => {
     if (event.target === resetDialog) resetDialog.close();
   });
-  window.addEventListener("hashchange", route);
+  document.documentElement.classList.add("js-motion");
+  window.addEventListener("hashchange", navigate);
   route();
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {

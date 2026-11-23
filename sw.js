@@ -1,9 +1,9 @@
 // Service worker de English Bloom: la app funciona sin conexión una vez
 // visitada. Estrategia stale-while-revalidate para los recursos propios; las
-// peticiones a otros dominios (API de GitHub) nunca se almacenan.
-const CACHE = "english-bloom-v2";
+// peticiones a otros dominios nunca se almacenan.
+const CACHE = "english-bloom-v3";
 const SHELL = [
-  "./", "index.html", "styles.css", "guides.css", "app.js", "materials.js", "github-sync.js",
+  "./", "index.html", "styles.css", "app.js",
   "guides/exam-format.js", "guides/b1.js", "guides/b2.js", "guides/c1.js", "guides/vocabulary.js", "guides/exam.js",
   "manifest.webmanifest", "icon.svg"
 ];

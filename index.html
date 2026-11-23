@@ -4,20 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Guías visuales B1, B2 y C1 para preparar el Cambridge C1 Advanced.">
-    <meta name="theme-color" content="#0d746f">
+    <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="dark">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
     <title>English Bloom · Tu camino al C1 Advanced</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="guides.css">
     <script src="guides/exam-format.js" defer></script>
     <script src="guides/b1.js" defer></script>
     <script src="guides/b2.js" defer></script>
     <script src="guides/c1.js" defer></script>
     <script src="guides/vocabulary.js" defer></script>
     <script src="guides/exam.js" defer></script>
-    <script src="github-sync.js" defer></script>
-    <script src="materials.js" defer></script>
     <script src="app.js" defer></script>
   </head>
   <body>
@@ -39,7 +37,6 @@
         <a class="nav-link" href="#/exam" data-nav="exam">Examen</a>
         <a class="nav-link" href="#/review" data-nav="review">Repaso</a>
         <a class="nav-link" href="#/plan" data-nav="plan">Plan</a>
-        <a class="nav-link" href="#/materials" data-nav="materials">Mis temas</a>
         <button class="icon-button" type="button" aria-label="Ver información del curso" data-about-button>?</button>
       </nav>
     </header>
@@ -54,7 +51,6 @@
       <a href="#/exam" data-nav="exam"><span aria-hidden="true">✎</span>Examen</a>
       <a href="#/review" data-nav="review"><span aria-hidden="true">↻</span>Repaso</a>
       <a href="#/plan" data-nav="plan"><span aria-hidden="true">◷</span>Plan</a>
-      <a href="#/materials" data-nav="materials"><span aria-hidden="true">▣</span>Temas</a>
     </nav>
 
     <footer>
@@ -76,7 +72,7 @@
       <button class="dialog-close" type="button" aria-label="Cerrar" data-close-reset>&times;</button>
       <p class="eyebrow">REINICIAR CURSO</p>
       <h2 id="reset-title">¿Borrar todo tu progreso?</h2>
-      <p>Se eliminarán tus puntuaciones, guías leídas y tu plan de estudio. Tus carpetas de Mis temas no se borran. Esta acción no se puede deshacer.</p>
+      <p>Se eliminarán tus puntuaciones, guías leídas, tu cola de repaso y tu plan de estudio. Esta acción no se puede deshacer.</p>
       <div class="dialog-actions">
         <button class="secondary-button" type="button" data-cancel-reset>Cancelar</button>
         <button class="danger-button" type="button" data-confirm-reset>Sí, reiniciar</button>
